@@ -28,3 +28,22 @@ def set_default_bt(default_bt: str):
     config = load_config()
     config['default_bt'] = default_bt
     save_config(config)
+
+def get_defaults() -> dict:
+    config = {}
+    config['default_bt'] = load_config().get('default_bt');
+    config['host'] = load_config().get('host');
+    config['port'] = load_config().get('port');
+    config['password'] = load_config().get('password');
+    config['username'] = load_config().get('username');
+
+def set_defaults(bt: str, host: str, port: int, password: str, username: str):
+    config = load_config()
+    config['default_bt'] = bt;
+    config['host'] = host;
+    config['port'] = port;
+    if password:
+        config['password'] = password;
+    if username:
+        config['username'] = username;
+    save_config(config)
