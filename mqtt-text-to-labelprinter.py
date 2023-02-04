@@ -35,9 +35,6 @@ def main():
     options = app_args_mqtt.parse()
     defaults = get_defaults()
 
-    if not options.info and not options.image:
-        bad_options('Image path required')
-
     if options.set_default:
         if not options.bt_address:
             bad_options('You must provide a BT address to set as default')
@@ -49,11 +46,13 @@ def main():
         else:
             set_defaults(options.bt_address,options.mqtt_host,options.mqtt_port,options.mqtt_user,options.mqtt_password)
             print(f"{options.bt_address} set as default BT address")
-            print(f"{options.mqtt_host} set as default BT address")
-            print(f"{options.mqtt_port} set as default BT address")
+            print(f"{options.mqtt_host} set as default MQTT host")
+            print(f"{options.mqtt_port} set as default MQTT port")
 
             if options.mqtt_user:
-                print(f"{options.mqtt_user} set as default BT address")
+                print(f"{options.mqtt_user} set as default MQTT User")
+            if options.mqtt_password:
+                print(f"{options.mqtt_password} set as default MQTT Password")
 
     if not options.bt_address:        
         if not defaults['default_bt']:
