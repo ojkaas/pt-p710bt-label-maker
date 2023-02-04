@@ -26,7 +26,7 @@ def connect_and_listen(options):
     client.on_message = on_message
 
     if options.setdefault and options:
-        client.username_pw_set("username", "password")
+        client.username_pw_set(options.mqtt_user, options.mqtt_password)
 
     client.connect(options.mqtt_host, options.mqtt_port, 60)
     client.loop_forever()
@@ -85,6 +85,8 @@ def main():
     if options.info:
         get_printer_info(options.bt_address, options.bt_channel)
         exit(0)
+    
+    connect_and_listen(options)
 
 if __name__ == "__main__":
     main()
