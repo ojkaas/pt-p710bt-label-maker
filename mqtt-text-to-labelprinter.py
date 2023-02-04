@@ -13,11 +13,11 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     text = msg.payload.decode()
-    print("Print message: " + text);
+    print("Print message: " + text)
     #subprocess.run(["convert", "-size", "300x70", "xc:none", "-gravity", "Center",
     #                "-pointsize", "35", "-annotate", "0",
     #                f"{text}", "result.png"])
-    make_label(userdata);
+    make_label(userdata)
     #os.system('python3.9 label_maker.py CHANGETODEVICEMACADDRESS --image result.png')
 
 def connect_and_listen(options):
