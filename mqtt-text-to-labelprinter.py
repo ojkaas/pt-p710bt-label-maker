@@ -86,3 +86,6 @@ def main():
     if options.info:
         get_printer_info(options.bt_address, options.bt_channel)
         exit(0)
+
+if __name__ == "__main__":
+    main()
