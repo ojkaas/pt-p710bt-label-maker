@@ -377,8 +377,7 @@ def main():
         get_printer_info(options.bt_address, options.bt_channel)
         exit(0)
 
-    make_label(options)
-
+    make_label(options))
 
 if __name__ == "__main__":
     main()
