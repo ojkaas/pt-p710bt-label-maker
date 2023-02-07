@@ -23,7 +23,9 @@ def on_message(client, userdata, msg):
         height = get_media_height();
         print("Media height: " + str(height))
         image = text_to_image(text,height)
-        image.save("text.png")
+        imageLocation = "text.png";
+        image.save(imageLocation)
+        userdata.image = imageLocation
         make_label(userdata, socket)
 
 def connect_and_listen(options):
