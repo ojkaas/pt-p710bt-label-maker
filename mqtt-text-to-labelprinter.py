@@ -54,7 +54,7 @@ def main():
             bad_options('You must provide a MQTT port to set as default')
 
         else:
-            set_defaults(options.bt_address,options.mqtt_host,options.mqtt_port,options.mqtt_user,options.mqtt_password)
+            set_defaults(options.bt_address,options.mqtt_host,options.mqtt_port,options.mqtt_password,options.mqtt_user)
             print(f"{options.bt_address} set as default BT address")
             print(f"{options.mqtt_host} set as default MQTT host")
             print(f"{options.mqtt_port} set as default MQTT port")
@@ -83,8 +83,8 @@ def main():
         print(f"Using MQTT Port of {options.mqtt_port}")
 
     if not options.mqtt_user:
-        if 'user' in defaults:
-            options.mqtt_user = defaults['user'];
+        if 'username' in defaults:
+            options.mqtt_user = defaults['username'];
             print(f"Using MQTT User of {options.mqtt_user}")
     
     if not options.mqtt_password:

@@ -35,11 +35,7 @@ def get_defaults() -> dict:
     config['host'] = load_config().get('host');
     config['port'] = load_config().get('port');
     config['password'] = load_config().get('password');
-    print('pw:')
-    print(config['password'])
     config['username'] = load_config().get('username');
-    print('usr:')
-    print(config['username'])
 
     return config
 
