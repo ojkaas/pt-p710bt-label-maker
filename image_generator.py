@@ -47,7 +47,14 @@ def text_to_image(text, image_height):
     font = ImageFont.truetype(font_path, font_size)
     
     # Draw the text on the image
-    draw.text(((image_width-text_width)/2, (image_height-text_height)/2), text, font=font, fill=(0, 0, 0, 255))
+    draw.text(
+        xy=(image_width / 2, image_height / 2),
+        text=text,
+        fill=(0, 0, 0, 255),
+        font=font,
+        anchor="mm",
+        align="center"
+    )
     
     return image
 
