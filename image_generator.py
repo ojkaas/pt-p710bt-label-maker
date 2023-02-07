@@ -58,3 +58,10 @@ def calculate_width(text, font_path, font_size):
     width, height = ImageDraw.Draw(Image.new("RGBA", (0, 0), (255, 255, 255, 0))).textsize(text, font=font)
     
     return width
+
+def main():
+    image = text_to_image("Hello World!", 70)
+    image.save("hello_world.png")
+
+if __name__ == "__main__":
+    main()
