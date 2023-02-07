@@ -34,7 +34,8 @@ def text_to_image(text, image_height):
     #    pointsize = calculate_font_size(text, font_path, image_height, 0.5)
     #    print(f"value: {value}")
     #    print(f"pointsize: {pointsize}")
-    image_width = calculate_width(text, font_path, image_height)
+    text_width,text_height = calculate_text_size(text, font_path, image_height)
+    image_width = text_width + 20;
     font_size = WIDTH_TO_FONT_SIZE[image_height]
     image_size = (image_width, image_height)
     
@@ -46,19 +47,15 @@ def text_to_image(text, image_height):
     font = ImageFont.truetype(font_path, font_size)
     
     # Draw the text on the image
-    _, _, w, h = draw.textbbox((0, 0), text, font=font)
-    draw.text(((image_width-w)/2, (image_height-h)/2), text, font=font, fill=(0, 0, 0, 255))
+    draw.text(((image_width-text_width)/2, (image_height-text_height)/2), text, font=font, fill=(0, 0, 0, 255))
     
     return image
 
-def calculate_width(text, font_path, font_size):
+def calculate_text_size(text, font_path, font_size):
     # Load the font and set the font size
     font = ImageFont.truetype(font_path, font_size)
-    
     # Get the size of the text
-    width, height = ImageDraw.Draw(Image.new("RGBA", (0, 0), (255, 255, 255, 0))).textlength(text, font=font)
-    
-    return width
+    return font.getsize(text)
 
 def main():
     image = text_to_image("Hello World!", 70)
