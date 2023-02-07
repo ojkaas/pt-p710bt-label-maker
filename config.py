@@ -37,6 +37,8 @@ def get_defaults() -> dict:
     config['password'] = load_config().get('password');
     config['username'] = load_config().get('username');
 
+    return config
+
 def set_defaults(bt: str, host: str, port: int, password: str, username: str):
     config = load_config()
     config['default_bt'] = bt;
