@@ -65,19 +65,19 @@ def main():
                 print(f"{options.mqtt_password} set as default MQTT Password")
 
     if not options.bt_address:        
-        if 'default_bt' in defaults:
+        if not 'default_bt' in defaults:
             bad_options("BT Address is required. If you'd like to remember it use --set-default")
         options.bt_address = defaults['default_bt'];
         print(f"Using BT Address of {options.bt_address}")
     
     if not options.mqtt_host:
-        if 'host' in defaults:
+        if not 'host' in defaults:
             bad_options("MQTT Host is required. If you'd like to remember it use --set-default")
         options.mqtt_host = defaults['host'];
         print(f"Using MQTT Host of {options.mqtt_host}")
 
     if not options.mqtt_port:
-        if 'port' in defaults:
+        if not 'port' in defaults:
             bad_options("MQTT Port is required. If you'd like to remember it use --set-default")
         options.mqtt_port = defaults['port'];
         print(f"Using MQTT Port of {options.mqtt_port}")
