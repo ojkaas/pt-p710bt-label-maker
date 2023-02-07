@@ -168,8 +168,6 @@ def connect_bluetooth(bt_address, bt_channel):
         return socket;
 
 def get_printer_info(socket):
-    send_invalidate(socket)
-    send_initialize(socket)
     send_status_information_request(socket)
 
     status_information = receive_status_information_response(socket)
