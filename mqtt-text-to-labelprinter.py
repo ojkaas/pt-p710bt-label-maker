@@ -1,11 +1,22 @@
 import paho.mqtt.client as mqtt
+
 import subprocess
 import os
 import app_args_mqtt
 
 from config import set_defaults, get_defaults
-from label_maker import bad_options, get_printer_info, make_label
+from label_maker import bad_options, get_printer_info, make_label, connect_bluetooth, get_media_height
+from image_generator import text_to_image, calculate_font_size
 
+
+TZE_DOTS = {
+    3: 24,  # Actually 3.5mm, not sure how this is reported if its 3 or 4
+    6: 32,
+    9: 50,
+    12: 70,
+    18: 112,
+    24: 128
+}
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
@@ -14,6 +25,12 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     text = msg.payload.decode()
     print("Print message: " + text)
+    
+    socket = connect_bluetooth(userdata.bt_address, userdata.bt_channel);
+    get_printer_info(socket);
+    height = get_media_height();
+
+
     #subprocess.run(["convert", "-size", "300x70", "xc:none", "-gravity", "Center",
     #                "-pointsize", "35", "-annotate", "0",
     #                f"{text}", "result.png"])
@@ -31,9 +48,16 @@ def connect_and_listen(options):
     client.connect(options.mqtt_host, options.mqtt_port, 60)
     client.loop_forever()
 
+
+
 def main():
     options = app_args_mqtt.parse()
     defaults = get_defaults()
+
+    for value in TZE_DOTS.values():
+        pointsize = calculate_font_size("IAmTestingThis", "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf", value, 0.5)
+        print(f"value: {value}")
+        print(f"pointsize: {pointsize}")
 
     if options.set_default:
         if not options.bt_address:

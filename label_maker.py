@@ -3,10 +3,13 @@ import sys
 from enum import IntEnum, IntFlag
 
 import bluetooth
+import time
 
 import app_args
 from config import set_default_bt, get_default_bt
 from label_rasterizer import encode_png, rasterize
+
+from enum import Enum
 
 STATUS_OFFSET_ERROR_INFORMATION_1 = 8
 STATUS_OFFSET_ERROR_INFORMATION_2 = 9
@@ -137,6 +140,10 @@ class TextColor(IntEnum):
     STENCIL = 0xF1
     INCOMPATIBLE = 0XFF
 
+class ConnectionState(Enum):
+    CONNECTED = 1
+    DONE = 2
+    DISCONNECTED = 3
 
 @contextlib.contextmanager
 def bt_socket_manager(*args, **kwargs):
@@ -147,45 +154,53 @@ def bt_socket_manager(*args, **kwargs):
     socket.close()
 
 
-def get_printer_info(bt_address, bt_channel):
+def connect_bluetooth(bt_address, bt_channel):
     with bt_socket_manager(bluetooth.RFCOMM) as socket:
-        socket.connect((bt_address, bt_channel))
+        while(True):    
+            try:
+                socket.connect((bt_address, bt_channel))
+                send_invalidate(socket)
+                send_initialize(socket)
+                break;
+            except bluetooth.btcommon.BluetoothError as error:
+                print("Could not connect: ", error, "; Retrying in 5s...")
+                time.sleep(5)
+        return socket;
 
-        send_invalidate(socket)
-        send_initialize(socket)
-        send_status_information_request(socket)
+def get_printer_info(socket):
+    send_invalidate(socket)
+    send_initialize(socket)
+    send_status_information_request(socket)
 
+    status_information = receive_status_information_response(socket)
+    handle_status_information(status_information)
+
+def get_media_height():
+    return TZE_DOTS.get(detected_media_width)
+
+def make_label(options, socket):
+    width = get_media_height()
+    data = encode_png(options.image, width)
+
+    send_switch_dynamic_command_mode(socket)
+    send_switch_automatic_status_notification_mode(socket)
+    send_print_information_command(socket, len(data), detected_media_width)
+    send_various_mode_settings(socket)
+    send_advanced_mode_settings(socket)
+    send_specify_margin_amount(socket)
+    send_select_compression_mode(socket)
+    send_raster_data(socket, data)
+    send_print_command_with_feeding(socket)
+
+    while True:
         status_information = receive_status_information_response(socket)
-        handle_status_information(status_information)
-
-
-def make_label(options):
-    with bt_socket_manager(bluetooth.RFCOMM) as socket:
-        socket.connect((options.bt_address, options.bt_channel))
-
-        send_invalidate(socket)
-        send_initialize(socket)
-        send_status_information_request(socket)
-
-        status_information = receive_status_information_response(socket)
-        handle_status_information(status_information)
-
-        width = TZE_DOTS.get(detected_media_width)
-        data = encode_png(options.image, width)
-
-        send_switch_dynamic_command_mode(socket)
-        send_switch_automatic_status_notification_mode(socket)
-        send_print_information_command(socket, len(data), detected_media_width)
-        send_various_mode_settings(socket)
-        send_advanced_mode_settings(socket)
-        send_specify_margin_amount(socket)
-        send_select_compression_mode(socket)
-        send_raster_data(socket, data)
-        send_print_command_with_feeding(socket)
-
-        while True:
-            status_information = receive_status_information_response(socket)
-            handle_status_information(status_information)
+        state = handle_status_information(status_information)
+        if state == ConnectionState.DONE:
+            socket.close()
+            break;
+        if state == ConnectionState.DISCONNECTED:
+            socket.close()
+            break;
 
 
 def send_invalidate(socket: bluetooth.BluetoothSocket):
@@ -295,7 +310,7 @@ def handle_status_information(status_information):
 
         print("Mode: %s" % ", ".join([f.name for f in Mode if f in mode]))
 
-        sys.exit(0)
+        return ConnectionState.DONE
 
     def handle_error_occurred(status_information):
         print("Error Occurred")
@@ -313,7 +328,7 @@ def handle_status_information(status_information):
         print("Turned Off")
         print("----------")
 
-        sys.exit("Device was turned off")
+        return ConnectionState.DISCONNECTED
 
     def handle_notification(status_information):
         print("Notification")
@@ -345,7 +360,7 @@ def handle_status_information(status_information):
 
     status_type = status_information[STATUS_OFFSET_STATUS_TYPE]
 
-    handlers[status_type](status_information)
+    return handlers[status_type](status_information)
 
 
 def bad_options(message):
@@ -374,10 +389,13 @@ def main():
         print(f"Using BT Address of {options.bt_address}")
 
     if options.info:
-        get_printer_info(options.bt_address, options.bt_channel)
+        socket = connect_bluetooth(options.bt_address, options.bt_channel)
+        get_printer_info(socket)
         exit(0)
 
-    make_label(options)
+    socket = connect_bluetooth(options.bt_address, options.bt_channel)
+    get_printer_info(socket)
+    make_label(options, socket)
 
 if __name__ == "__main__":
     main()
