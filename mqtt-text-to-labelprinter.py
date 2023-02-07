@@ -5,7 +5,7 @@ import os
 import app_args_mqtt
 
 from config import set_defaults, get_defaults
-from label_maker import bad_options, get_printer_info, make_label, connect_bluetooth, get_media_height
+from label_maker import bad_options, get_printer_info, make_label, bt_socket_manager, get_media_height,connect_bluetooth
 from image_generator import text_to_image, calculate_font_size
 
 def on_connect(client, userdata, flags, rc):
@@ -13,22 +13,18 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("label/print")
 
 def on_message(client, userdata, msg):
-    text = msg.payload.decode()
-    print("Print message: " + text)
-    print(userdata.bt_address)
-    socket = connect_bluetooth(userdata.bt_address, userdata.bt_channel);
-    print(socket)
-    get_printer_info(socket);
-    height = get_media_height();
-    print("Media height: " + str(height))
-    image = text_to_image(text,height)
-    image.save("text.png")
-
-    #subprocess.run(["convert", "-size", "300x70", "xc:none", "-gravity", "Center",
-    #                "-pointsize", "35", "-annotate", "0",
-    #                f"{text}", "result.png"])
-    make_label(userdata)
-    #os.system('python3.9 label_maker.py CHANGETODEVICEMACADDRESS --image result.png')
+    with bt_socket_manager() as socket:
+        text = msg.payload.decode()
+        print("Print message: " + text)
+        print(userdata.bt_address)
+        socket = connect_bluetooth(userdata.bt_address, userdata.bt_channel);
+    
+        get_printer_info(socket);
+        height = get_media_height();
+        print("Media height: " + str(height))
+        image = text_to_image(text,height)
+        image.save("text.png")
+        make_label(userdata)
 
 def connect_and_listen(options):
     client = mqtt.Client(userdata=options)

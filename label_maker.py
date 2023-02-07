@@ -146,25 +146,22 @@ class ConnectionState(Enum):
     DISCONNECTED = 3
 
 @contextlib.contextmanager
-def bt_socket_manager(*args, **kwargs):
-    socket = bluetooth.BluetoothSocket(*args, **kwargs)
+def bt_socket_manager():
+    socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 
     yield socket
 
     socket.close()
 
-
-def connect_bluetooth(bt_address, bt_channel):
-    with bt_socket_manager(bluetooth.RFCOMM) as socket:
-        while(True):    
-            try:
-                socket.connect((bt_address, bt_channel))
-                print("Connected")
-                break;
-            except bluetooth.btcommon.BluetoothError as error:
-                print("Could not connect: ", error, "; Retrying in 5s...")
-                time.sleep(5)
-        return socket;
+def connect_bluetooth(socket, bt_address, bt_channel):
+    while(True):    
+        try:
+            socket.connect((bt_address, bt_channel))
+            break;
+        except bluetooth.btcommon.BluetoothError as error:
+            print("Could not connect: ", error, "; Retrying in 5s...")
+            time.sleep(5)
+    return socket;
 
 def get_printer_info(socket):
     send_invalidate(socket)
