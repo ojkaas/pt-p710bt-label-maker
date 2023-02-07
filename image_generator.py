@@ -34,8 +34,9 @@ def text_to_image(text, image_height):
     #    pointsize = calculate_font_size(text, font_path, image_height, 0.5)
     #    print(f"value: {value}")
     #    print(f"pointsize: {pointsize}")
-    
+
     text_width,text_height = calculate_text_size(text, font_path, image_height)
+    print(f"text_width: {text_width}")
     image_width = text_width + 5;
     font_size = WIDTH_TO_FONT_SIZE[image_height]
     image_size = (image_width, image_height)
