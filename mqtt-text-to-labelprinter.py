@@ -6,7 +6,7 @@ import app_args_mqtt
 
 from config import set_defaults, get_defaults
 from label_maker import bad_options, get_printer_info, make_label, connect_bluetooth, get_media_height
-from image_generator import text_to_image, calculate_font_sizexs
+from image_generator import text_to_image, calculate_font_size
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
