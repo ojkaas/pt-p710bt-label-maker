@@ -29,7 +29,8 @@ def on_message(client, userdata, msg):
     socket = connect_bluetooth(userdata.bt_address, userdata.bt_channel);
     get_printer_info(socket);
     height = get_media_height();
-
+    image = text_to_image(text,height)
+    image.save("text.png")
 
     #subprocess.run(["convert", "-size", "300x70", "xc:none", "-gravity", "Center",
     #                "-pointsize", "35", "-annotate", "0",
@@ -53,11 +54,6 @@ def connect_and_listen(options):
 def main():
     options = app_args_mqtt.parse()
     defaults = get_defaults()
-
-    for value in TZE_DOTS.values():
-        pointsize = calculate_font_size("IAmTestingThis", "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf", value, 0.5)
-        print(f"value: {value}")
-        print(f"pointsize: {pointsize}")
 
     if options.set_default:
         if not options.bt_address:

@@ -1,14 +1,15 @@
 from PIL import Image, ImageDraw, ImageFont
 
 WIDTH_TO_FONT_SIZE = {
-    24: 24,  # Actually 3.5mm, not sure how this is reported if its 3 or 4
-    32: 32,
-    50: 50,
-    70: 70,
-    112: 112,
-    128: 128
+    24: 10,  
+    32: 14,
+    50: 22,
+    70: 31,
+    112: 50,
+    128: 57
 }
 
+#If you would use a different font or different label sizes, this can be used to calculate the appropriate font size.
 def calculate_font_size(text, font_path, image_height, desired_height_ratio):
     def calculate_height(font_size):
         font = ImageFont.truetype(font_path, font_size)
@@ -26,9 +27,17 @@ def calculate_font_size(text, font_path, image_height, desired_height_ratio):
 
     return low
 
-def text_to_image(text, font_size, image_width, image_height):
-    image_size = (image_width, image_height)
+def text_to_image(text, image_height):
     font_path = "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
+
+    #for value in WIDTH_TO_FONT_SIZE.keys():
+    #    pointsize = calculate_font_size(text, font_path, image_height, 0.5)
+    #    print(f"value: {value}")
+    #    print(f"pointsize: {pointsize}")
+    image_width = calculate_width(text, font_path, image_height)
+    font_size = WIDTH_TO_FONT_SIZE[image_height]
+    image_size = (image_width, image_height)
+    
     # Create a transparent image
     image = Image.new("RGBA", image_size, (255, 255, 255, 0))
     draw = ImageDraw.Draw(image)
