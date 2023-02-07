@@ -46,7 +46,8 @@ def text_to_image(text, image_height):
     font = ImageFont.truetype(font_path, font_size)
     
     # Draw the text on the image
-    draw.text((0, 0), text, font=font, fill=(0, 0, 0, 255))
+    _, _, w, h = draw.textbbox((0, 0), text, font=font)
+    draw.text(((image_width-w)/2, (image_height-h)/2), text, font=font, fill=(0, 0, 0, 255))
     
     return image
 
@@ -55,7 +56,7 @@ def calculate_width(text, font_path, font_size):
     font = ImageFont.truetype(font_path, font_size)
     
     # Get the size of the text
-    width, height = ImageDraw.Draw(Image.new("RGBA", (0, 0), (255, 255, 255, 0))).textsize(text, font=font)
+    width, height = ImageDraw.Draw(Image.new("RGBA", (0, 0), (255, 255, 255, 0))).textlength(text, font=font)
     
     return width
 
