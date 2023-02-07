@@ -17,6 +17,7 @@ def on_message(client, userdata, msg):
     print("Print message: " + text)
     print(userdata.bt_address)
     socket = connect_bluetooth(userdata.bt_address, userdata.bt_channel);
+    print(socket)
     get_printer_info(socket);
     height = get_media_height();
     print("Media height: " + str(height))
