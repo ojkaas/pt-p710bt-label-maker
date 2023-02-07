@@ -24,7 +24,7 @@ def on_message(client, userdata, msg):
         print("Media height: " + str(height))
         image = text_to_image(text,height)
         image.save("text.png")
-        make_label(userdata)
+        make_label(userdata, socket)
 
 def connect_and_listen(options):
     client = mqtt.Client(userdata=options)
