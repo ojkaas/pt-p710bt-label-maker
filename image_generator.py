@@ -28,17 +28,18 @@ def calculate_font_size(text, font_path, image_height, desired_height_ratio):
     return low
 
 def text_to_image(text, image_height):
-    font_path = "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
+    #font_path = "/Library/Fonts/LiberationSans-Regular.ttf"
+    font_path = "/usr/share/fonts/truetype/freefont/FreeSans.ttf"
 
     #for value in WIDTH_TO_FONT_SIZE.keys():
     #    pointsize = calculate_font_size(text, font_path, image_height, 0.5)
     #    print(f"value: {value}")
     #    print(f"pointsize: {pointsize}")
-
-    text_width,text_height = calculate_text_size(text, font_path, image_height)
-    print(f"text_width: {text_width}")
-    image_width = text_width + 5;
+    
     font_size = WIDTH_TO_FONT_SIZE[image_height]
+    text_width = calculate_text_size(text, font_path, font_size)
+    image_width = text_width + 10;
+    print(f"text_width: {text_width}")
     image_size = (image_width, image_height)
     
     # Create a transparent image
@@ -64,7 +65,7 @@ def calculate_text_size(text, font_path, font_size):
     # Load the font and set the font size
     font = ImageFont.truetype(font_path, font_size)
     # Get the size of the text
-    return font.getsize(text)
+    return int(font.getlength(text))
 
 def main():
     image = text_to_image("Hello World!", 70)
