@@ -15,7 +15,7 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     text = msg.payload.decode()
     print("Print message: " + text)
-    
+    print(userdata.bt_address)
     socket = connect_bluetooth(userdata.bt_address, userdata.bt_channel);
     get_printer_info(socket);
     height = get_media_height();
