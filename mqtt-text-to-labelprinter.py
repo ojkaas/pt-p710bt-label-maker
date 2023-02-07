@@ -19,6 +19,7 @@ def on_message(client, userdata, msg):
     socket = connect_bluetooth(userdata.bt_address, userdata.bt_channel);
     get_printer_info(socket);
     height = get_media_height();
+    print("Media height: " + str(height))
     image = text_to_image(text,height)
     image.save("text.png")
 
