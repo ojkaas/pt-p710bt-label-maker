@@ -159,6 +159,7 @@ def connect_bluetooth(bt_address, bt_channel):
         while(True):    
             try:
                 socket.connect((bt_address, bt_channel))
+                print("Connected")
                 break;
             except bluetooth.btcommon.BluetoothError as error:
                 print("Could not connect: ", error, "; Retrying in 5s...")
