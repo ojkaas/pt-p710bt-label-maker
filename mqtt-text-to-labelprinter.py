@@ -6,17 +6,7 @@ import app_args_mqtt
 
 from config import set_defaults, get_defaults
 from label_maker import bad_options, get_printer_info, make_label, connect_bluetooth, get_media_height
-from image_generator import text_to_image, calculate_font_size
-
-
-TZE_DOTS = {
-    3: 24,  # Actually 3.5mm, not sure how this is reported if its 3 or 4
-    6: 32,
-    9: 50,
-    12: 70,
-    18: 112,
-    24: 128
-}
+from image_generator import text_to_image, calculate_font_sizexs
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
@@ -75,30 +65,30 @@ def main():
                 print(f"{options.mqtt_password} set as default MQTT Password")
 
     if not options.bt_address:        
-        if not defaults.get('default_bt', True):
+        if defaults.get('default_bt', False):
             bad_options("BT Address is required. If you'd like to remember it use --set-default")
         options.bt_address = defaults['default_bt'];
         print(f"Using BT Address of {options.bt_address}")
     
     if not options.mqtt_host:
-        if not defaults.get('host', True):
+        if defaults.get('host', False):
             bad_options("MQTT Host is required. If you'd like to remember it use --set-default")
         options.mqtt_host = defaults['host'];
         print(f"Using MQTT Host of {options.mqtt_host}")
 
     if not options.mqtt_port:
-        if not defaults.get('port', True):
+        if defaults.get('port', False):
             bad_options("MQTT Port is required. If you'd like to remember it use --set-default")
         options.mqtt_port = defaults['port'];
         print(f"Using MQTT Port of {options.mqtt_port}")
 
     if not options.mqtt_user:
-        if defaults.get('user', True):
+        if defaults.get('user', False):
             options.mqtt_user = defaults['user'];
             print(f"Using MQTT User of {options.mqtt_user}")
     
     if not options.mqtt_password:
-        if defaults.get('password', True):
+        if defaults.get('password', False):
             options.mqtt_password = defaults['password'];
             print(f"Using MQTT Password of {options.mqtt_password}")
         

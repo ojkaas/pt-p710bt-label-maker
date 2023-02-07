@@ -8,7 +8,6 @@ PATH = os.path.dirname(__file__)
 def set_args() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description='Label Maker for PT-P710BT')
     parser.add_argument('bt_address', nargs='?', help='Bluetooth address of device (eg. "EC:79:49:63:2A:80")')
-    parser.add_argument('--image', type=str, help='Path to image to print')
     parser.add_argument('--mqtt-host', type=str, help='URL to MQTT broker')
     parser.add_argument('--mqtt-port', type=int, help='Port to MQTT broker')
     parser.add_argument('--mqtt-user', type=str, help='User of MQTT broker')
