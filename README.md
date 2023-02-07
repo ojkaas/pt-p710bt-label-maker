@@ -1,8 +1,18 @@
-# P-Touch Cube (PT-P710BT) label maker
+# P-Touch Cube (PT-P710BT) label maker - With MQTT support
 
+**Fork of https://github.com/SkoZombie/pt-p710bt-label-maker**
 **Fork of https://github.com/robby-cornelissen/pt-p710bt-label-maker**
 
-## Key Changes in Fork
+## Key Changes in OJkaas Fork
+
+Because I wanted to be able to automate certain label creation flows from Home Assistant, I deciced to add a MQTT listener script to the existing label printer script. This script listens to a topic and pickups text messages and automatically converts them to appropriate PNG images that can be printer to the currently installed tape. 
+
+* Added a MQTT Topic listener that listens for a text message - Message is then automatically printer
+* Can convert received text Strings into images
+* Checks tape metadata to determine label height, so generated labels match installed tape.
+* All MQTT settings can be saved as defaults
+
+## Key Changes in SkoZombie Fork
 
 * Added support to use `-i`/`--info` to just query the printer information
 * Added ability to define default BT address to save typing it in each time
