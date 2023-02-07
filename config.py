@@ -45,7 +45,9 @@ def set_defaults(bt: str, host: str, port: int, password: str, username: str):
     config['host'] = host;
     config['port'] = port;
     if password:
+        print('setting password')
         config['password'] = password;
     if username:
+        print('setting username')
         config['username'] = username;
     save_config(config)
